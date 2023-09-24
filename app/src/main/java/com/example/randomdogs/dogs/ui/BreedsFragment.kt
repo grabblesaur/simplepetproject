@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.randomdogs.databinding.FragmentBreedsBinding
 import com.example.randomdogs.dogs.data.Breed
 import com.example.randomdogs.dogs.data.BreedRemoteDataSourceImpl
@@ -20,6 +21,8 @@ class BreedsFragment : Fragment() {
 
 	private var _binding: FragmentBreedsBinding? = null
 	private val binding get() = _binding!!
+
+	private var breedAdapter = BreedAdapter()
 
 	companion object {
 
@@ -42,6 +45,8 @@ class BreedsFragment : Fragment() {
 		setupViewModel()
 		observeViewModel()
 
+		setupViews()
+
 		viewModel.loadDogs()
 	}
 
@@ -61,9 +66,15 @@ class BreedsFragment : Fragment() {
 		viewModel.breeds.observe(viewLifecycleOwner) { onBreedChanged(it) }
 	}
 
+	private fun setupViews() {
+		with(binding) {
+			breedListRecycler.layoutManager = LinearLayoutManager(context)
+			breedListRecycler.adapter = breedAdapter
+		}
+	}
+
 	private fun onBreedChanged(breeds: List<Breed>) {
-		binding.firstBreed.text = breeds.first().name
-		binding.secondBreed.text = breeds[1].name
+		breedAdapter.addBreeds(breeds)
 	}
 
 	override fun onDestroyView() {

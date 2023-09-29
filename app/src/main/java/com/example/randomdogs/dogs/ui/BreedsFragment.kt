@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.randomdogs.RetrofitManager
 import com.example.randomdogs.databinding.FragmentBreedsBinding
+import com.example.randomdogs.dogs.api.BreedApi
 import com.example.randomdogs.dogs.data.Breed
 import com.example.randomdogs.dogs.data.BreedRemoteDataSourceImpl
 import com.example.randomdogs.dogs.data.BreedRepositoryImpl
@@ -51,7 +53,8 @@ class BreedsFragment : Fragment() {
 	}
 
 	private fun setupViewModel() {
-		val breedRemoteDataSource = BreedRemoteDataSourceImpl()
+		val api = RetrofitManager.instance.create(BreedApi::class.java)
+		val breedRemoteDataSource = BreedRemoteDataSourceImpl(api)
 		val breedRepository = BreedRepositoryImpl(breedRemoteDataSource)
 		val getBreedListUseCase = GetBreedListUseCase(breedRepository)
 		val factory = BreedsViewModelFactory(getBreedListUseCase)

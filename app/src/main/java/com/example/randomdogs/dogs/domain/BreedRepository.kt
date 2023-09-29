@@ -4,5 +4,5 @@ import com.example.randomdogs.dogs.data.Breed
 
 interface BreedRepository {
 
-	fun get(): List<Breed>
+	suspend fun get(): List<Breed>
 }

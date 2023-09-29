@@ -6,6 +6,6 @@ class BreedRepositoryImpl(
 	private val breedRemoteDataSource: BreedRemoteDataSource,
 ) : BreedRepository {
 
-	override fun get(): List<Breed> =
+	override suspend fun get(): List<Breed> =
 		breedRemoteDataSource.get()
 }

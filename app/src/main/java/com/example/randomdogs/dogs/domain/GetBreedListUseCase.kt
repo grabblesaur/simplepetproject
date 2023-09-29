@@ -6,6 +6,6 @@ class GetBreedListUseCase(
 	private val breedRepository: BreedRepository,
 ) {
 
-	fun get(): List<Breed> =
+	suspend fun get(): List<Breed> =
 		breedRepository.get()
 }

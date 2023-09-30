@@ -3,16 +3,24 @@ package com.example.randomdogs.dogs.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.randomdogs.databinding.BreedItemBinding
 import com.example.randomdogs.dogs.data.Breed
 
 class BreedAdapter : RecyclerView.Adapter<BreedViewHolder>() {
 
 	private var breedList = mutableListOf<Breed>()
+	private var listener: ((Breed) -> Unit)? = null
 
-	fun addBreeds(breedList: List<Breed>) {
+	fun setBreeds(breedList: List<Breed>) {
+		this.breedList.clear()
 		this.breedList.addAll(breedList)
-		notifyItemRangeInserted(breedList.size, breedList.size)
+
+		notifyItemRangeChanged(0, breedList.size)
+	}
+
+	fun setOnItemClickListener(listener: (Breed) -> Unit) {
+		this.listener = listener
 	}
 
 	override fun onCreateViewHolder(
@@ -22,7 +30,7 @@ class BreedAdapter : RecyclerView.Adapter<BreedViewHolder>() {
 		val layoutInflater = LayoutInflater.from(parent.context)
 		val binding = BreedItemBinding.inflate(layoutInflater, parent, false)
 
-		return BreedViewHolder(binding)
+		return BreedViewHolder(binding, listener)
 	}
 
 	override fun getItemCount(): Int =
@@ -35,9 +43,20 @@ class BreedAdapter : RecyclerView.Adapter<BreedViewHolder>() {
 
 class BreedViewHolder(
 	private val binding: BreedItemBinding,
+	private val onClick: ((Breed) -> Unit)?,
 ) : RecyclerView.ViewHolder(binding.root) {
 
 	fun bind(breed: Breed) {
-		binding.breedItemText.text = breed.name
+		with(binding) {
+			root.setOnClickListener { onClick?.invoke(breed) }
+
+			Glide.with(root)
+				.load(breed.image.url)
+				.circleCrop()
+				.into(image)
+
+			name.text = breed.name
+			temperament.text = breed.temperament
+		}
 	}
 }

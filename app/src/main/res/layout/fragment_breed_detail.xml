@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:overScrollMode="never"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingHorizontal="@dimen/spacing_default"
+            android:paddingVertical="@dimen/spacing_small"
+            android:textSize="24sp"
+            tools:text="Breed Name" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image"
+            android:layout_width="@dimen/image_item_size"
+            android:layout_height="@dimen/image_item_size"
+            android:layout_gravity="center_horizontal" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_default" />
+
+        <TextView
+            android:id="@+id/temperament"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/spacing_default"
+            android:paddingVertical="@dimen/spacing_extra_small"
+            android:visibility="gone"
+            tools:text="Temperament: blah blah blah"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/countryCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/spacing_default"
+            android:paddingVertical="@dimen/spacing_extra_small"
+            android:visibility="gone"
+            tools:text="Country code: blah blah blah"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/bredFor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/spacing_default"
+            android:paddingVertical="@dimen/spacing_extra_small"
+            android:visibility="gone"
+            tools:text="Bred For: blah blah blah"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/breedGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/spacing_default"
+            android:paddingVertical="@dimen/spacing_extra_small"
+            android:visibility="gone"
+            tools:text="Breed group: blah blah blah"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/lifeSpan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/spacing_default"
+            android:paddingVertical="@dimen/spacing_extra_small"
+            android:visibility="gone"
+            tools:text="Life span: blah blah blah"
+            tools:visibility="visible" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

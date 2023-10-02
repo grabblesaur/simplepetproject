@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.randomdogs.R
 import com.example.randomdogs.RetrofitManager
 import com.example.randomdogs.databinding.FragmentBreedsBinding
 import com.example.randomdogs.dogs.api.BreedApi
@@ -74,14 +74,15 @@ class BreedsFragment : Fragment() {
 		with(binding) {
 			breedListRecycler.layoutManager = LinearLayoutManager(requireContext())
 			breedListRecycler.adapter = breedAdapter
-			breedAdapter.setOnItemClickListener {
-				Toast.makeText(
-					requireContext(),
-					"${it.name} was clicked",
-					Toast.LENGTH_SHORT
-				).show()
-			}
+			breedAdapter.setOnItemClickListener(::openDetailScreen)
 		}
+	}
+
+	private fun openDetailScreen(breed: Breed) {
+		parentFragmentManager.beginTransaction()
+			.add(R.id.fragment_container, BreedDetailFragment.newInstance(breed))
+			.addToBackStack(null)
+			.commit()
 	}
 
 	private fun onBreedChanged(breeds: List<Breed>) {

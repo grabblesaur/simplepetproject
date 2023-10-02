@@ -1,7 +1,10 @@
 package com.example.randomdogs.dogs.data
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Breed(
 	val id: String,
 	val name: String,
@@ -16,4 +19,4 @@ data class Breed(
 	@SerializedName("reference_image_id")
 	val referenceImageId: String,
 	val image: Image,
-)
+) : Parcelable

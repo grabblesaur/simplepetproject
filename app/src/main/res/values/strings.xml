@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Random Dogs</string>
     <string name="title_activity_main">MainActivity</string>
+    
+    <string name="optional_text">%1$s: %2$s</string>
+    <string name="temperament">Temperament</string>
+    <string name="country_code">Country Code</string>
+    <string name="bred_for">Bred for</string>
+    <string name="breed_group">Breed group</string>
+    <string name="life_span">Life span</string>
 </resources>

@@ -8,6 +8,8 @@ import kotlinx.parcelize.Parcelize
 data class Breed(
 	val id: String,
 	val name: String,
+	@SerializedName("country_code")
+	val countryCode: String? = null,
 	@SerializedName("bred_for")
 	val bredFor: String,
 	@SerializedName("breed_group")

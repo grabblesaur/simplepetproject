@@ -8,10 +8,12 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.randomdogs.R
 import com.example.randomdogs.databinding.FragmentBreedDetailBinding
 import com.example.randomdogs.dogs.data.Breed
+import com.example.randomdogs.dogs.data.Image
 import com.example.randomdogs.dogs.presentation.BreedDetailViewModel
 import com.example.randomdogs.dogs.presentation.BreedDetailViewModelFactory
 import com.example.randomdogs.parcelable
@@ -23,8 +25,11 @@ class BreedDetailFragment : Fragment() {
 
 	private lateinit var viewModel: BreedDetailViewModel
 
+	private val imageAdapter = ImageAdapter()
+
 	companion object {
 		private const val BREED_KEY = "BREED_KEY"
+		private const val SPAN_COUNT = 3
 
 		fun newInstance(breed: Breed): Fragment {
 			val fragment = BreedDetailFragment()
@@ -53,7 +58,28 @@ class BreedDetailFragment : Fragment() {
 			factory = viewModelFactory,
 		)[BreedDetailViewModel::class.java]
 
+		setupRecyclerView()
+
 		viewModel.breedLiveData.observe(viewLifecycleOwner) { showBreed(it) }
+		viewModel.images.observe(viewLifecycleOwner) { showImages(it) }
+
+		viewModel.loadImages()
+	}
+
+	private fun setupRecyclerView() {
+		with(binding) {
+			val itemOffset = resources.getDimensionPixelOffset(R.dimen.image_item_offset)
+			val itemDecoration = GridItemDecoration(itemOffset)
+
+			imagesRecycler.adapter = imageAdapter
+			imagesRecycler.addItemDecoration(itemDecoration)
+			imagesRecycler.layoutManager = object : GridLayoutManager(
+				requireContext(),
+				SPAN_COUNT,
+			) {
+				override fun canScrollVertically(): Boolean = false
+			}
+		}
 	}
 
 	private fun showBreed(breed: Breed) {
@@ -78,5 +104,9 @@ class BreedDetailFragment : Fragment() {
 			textView.text = getString(R.string.optional_text, preText, text)
 			textView.isVisible = true
 		}
+	}
+
+	private fun showImages(list: List<Image>) {
+		imageAdapter.setData(list)
 	}
 }

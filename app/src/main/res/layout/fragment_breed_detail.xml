@@ -83,5 +83,12 @@
             android:visibility="gone"
             tools:text="Life span: blah blah blah"
             tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/imagesRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_default"
+            tools:listitem="@layout/image_item" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

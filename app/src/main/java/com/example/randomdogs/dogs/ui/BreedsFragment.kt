@@ -17,6 +17,7 @@ import com.example.randomdogs.dogs.data.BreedRepositoryImpl
 import com.example.randomdogs.dogs.domain.GetBreedListUseCase
 import com.example.randomdogs.dogs.presentation.BreedsViewModel
 import com.example.randomdogs.dogs.presentation.BreedsViewModelFactory
+import kotlinx.coroutines.Dispatchers
 
 class BreedsFragment : Fragment() {
 
@@ -56,7 +57,7 @@ class BreedsFragment : Fragment() {
 	private fun setupViewModel() {
 		val api = RetrofitManager.instance.create(BreedApi::class.java)
 		val breedRemoteDataSource = BreedRemoteDataSourceImpl(api)
-		val breedRepository = BreedRepositoryImpl(breedRemoteDataSource)
+		val breedRepository = BreedRepositoryImpl(breedRemoteDataSource, Dispatchers.IO)
 		val getBreedListUseCase = GetBreedListUseCase(breedRepository)
 		val factory = BreedsViewModelFactory(getBreedListUseCase)
 

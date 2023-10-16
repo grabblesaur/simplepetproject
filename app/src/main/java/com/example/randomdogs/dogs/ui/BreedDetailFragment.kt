@@ -22,6 +22,7 @@ import com.example.randomdogs.dogs.domain.GetImageListUseCase
 import com.example.randomdogs.dogs.presentation.BreedDetailViewModel
 import com.example.randomdogs.dogs.presentation.BreedDetailViewModelFactory
 import com.example.randomdogs.parcelable
+import kotlinx.coroutines.Dispatchers
 
 class BreedDetailFragment : Fragment() {
 
@@ -69,7 +70,7 @@ class BreedDetailFragment : Fragment() {
 		val breed = requireArguments().parcelable<Breed>(BREED_KEY)!!
 		val api = RetrofitManager.instance.create(ImageApi::class.java)
 		val imageDataSource = ImageDataSource(api)
-		val imageRepository = ImageRepositoryImpl(imageDataSource)
+		val imageRepository = ImageRepositoryImpl(imageDataSource, Dispatchers.IO)
 		val getImageListUseCase = GetImageListUseCase(imageRepository)
 		val viewModelFactory = BreedDetailViewModelFactory(breed, getImageListUseCase)
 

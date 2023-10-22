@@ -1,6 +1,7 @@
 package com.example.randomdogs.di.modules
 
 import com.example.randomdogs.dogs.api.BreedApi
+import com.example.randomdogs.dogs.api.ImageApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -41,4 +42,8 @@ class NetworkModule {
 	@Provides
 	fun provideBreedApi(retrofit: Retrofit): BreedApi =
 		retrofit.create(BreedApi::class.java)
+
+	@Provides
+	fun provideImageApi(retrofit: Retrofit): ImageApi =
+		retrofit.create(ImageApi::class.java)
 }

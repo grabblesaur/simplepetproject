@@ -7,29 +7,29 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.randomdogs.R
-import com.example.randomdogs.RetrofitManager
+import com.example.randomdogs.appComponent
 import com.example.randomdogs.databinding.FragmentBreedDetailBinding
-import com.example.randomdogs.dogs.api.ImageApi
 import com.example.randomdogs.dogs.data.Breed
 import com.example.randomdogs.dogs.data.Image
-import com.example.randomdogs.dogs.data.ImageDataSource
-import com.example.randomdogs.dogs.data.ImageRepositoryImpl
-import com.example.randomdogs.dogs.domain.GetImageListUseCase
 import com.example.randomdogs.dogs.presentation.BreedDetailViewModel
 import com.example.randomdogs.dogs.presentation.BreedDetailViewModelFactory
 import com.example.randomdogs.parcelable
-import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 class BreedDetailFragment : Fragment() {
 
 	private var _binding: FragmentBreedDetailBinding? = null
 	private val binding get() = _binding!!
 
-	private lateinit var viewModel: BreedDetailViewModel
+	@Inject
+	lateinit var factory: BreedDetailViewModelFactory.Factory
+
+	private val breed: Breed by lazy { requireArguments().parcelable(BREED_KEY)!! }
+	private val viewModel: BreedDetailViewModel by viewModels { factory.create(breed) }
 
 	private val imageAdapter = ImageAdapter()
 
@@ -50,6 +50,7 @@ class BreedDetailFragment : Fragment() {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
+		requireContext().appComponent.inject(this)
 		_binding = FragmentBreedDetailBinding.inflate(inflater, container, false)
 		return binding.root
 	}
@@ -57,27 +58,12 @@ class BreedDetailFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		setupViewModel()
 		setupRecyclerView()
 
 		viewModel.breedLiveData.observe(viewLifecycleOwner) { showBreed(it) }
 		viewModel.images.observe(viewLifecycleOwner) { showImages(it) }
 
 		viewModel.loadImages()
-	}
-
-	private fun setupViewModel() {
-		val breed = requireArguments().parcelable<Breed>(BREED_KEY)!!
-		val api = RetrofitManager.instance.create(ImageApi::class.java)
-		val imageDataSource = ImageDataSource(api)
-		val imageRepository = ImageRepositoryImpl(imageDataSource, Dispatchers.IO)
-		val getImageListUseCase = GetImageListUseCase(imageRepository)
-		val viewModelFactory = BreedDetailViewModelFactory(breed, getImageListUseCase)
-
-		viewModel = ViewModelProvider(
-			owner = this,
-			factory = viewModelFactory,
-		)[BreedDetailViewModel::class.java]
 	}
 
 	private fun setupRecyclerView() {

@@ -5,23 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.randomdogs.R
-import com.example.randomdogs.RetrofitManager
+import com.example.randomdogs.appComponent
 import com.example.randomdogs.databinding.FragmentBreedsBinding
-import com.example.randomdogs.dogs.api.BreedApi
 import com.example.randomdogs.dogs.data.Breed
-import com.example.randomdogs.dogs.data.BreedRemoteDataSourceImpl
-import com.example.randomdogs.dogs.data.BreedRepositoryImpl
-import com.example.randomdogs.dogs.domain.GetBreedListUseCase
 import com.example.randomdogs.dogs.presentation.BreedsViewModel
 import com.example.randomdogs.dogs.presentation.BreedsViewModelFactory
-import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 class BreedsFragment : Fragment() {
 
-	private lateinit var viewModel: BreedsViewModel
+	@Inject
+	lateinit var factory: BreedsViewModelFactory
+	private val viewModel: BreedsViewModel by viewModels { factory }
 
 	private var _binding: FragmentBreedsBinding? = null
 	private val binding get() = _binding!!
@@ -39,6 +37,7 @@ class BreedsFragment : Fragment() {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
+		requireContext().appComponent.inject(this)
 		_binding = FragmentBreedsBinding.inflate(inflater, container, false)
 		return binding.root
 	}
@@ -46,25 +45,11 @@ class BreedsFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		setupViewModel()
 		observeViewModel()
 
 		setupViews()
 
 		viewModel.loadDogs()
-	}
-
-	private fun setupViewModel() {
-		val api = RetrofitManager.instance.create(BreedApi::class.java)
-		val breedRemoteDataSource = BreedRemoteDataSourceImpl(api)
-		val breedRepository = BreedRepositoryImpl(breedRemoteDataSource, Dispatchers.IO)
-		val getBreedListUseCase = GetBreedListUseCase(breedRepository)
-		val factory = BreedsViewModelFactory(getBreedListUseCase)
-
-		viewModel = ViewModelProvider(
-			owner = this,
-			factory = factory
-		)[BreedsViewModel::class.java]
 	}
 
 	private fun observeViewModel() {

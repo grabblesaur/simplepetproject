@@ -1,16 +1,10 @@
 package com.example.randomdogs.dogs.data
 
 import com.example.randomdogs.dogs.api.BreedApi
+import javax.inject.Inject
 
-interface BreedRemoteDataSource {
+class BreedRemoteDataSource @Inject constructor(private val api: BreedApi) {
 
-	suspend fun get(): List<Breed>
-}
-
-class BreedRemoteDataSourceImpl(
-	private val api: BreedApi,
-) : BreedRemoteDataSource {
-
-	override suspend fun get(): List<Breed> =
+	suspend fun get(): List<Breed> =
 		api.get()
 }

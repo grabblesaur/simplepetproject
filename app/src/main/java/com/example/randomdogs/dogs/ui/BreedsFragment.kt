@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.randomdogs.R
 import com.example.randomdogs.appComponent
@@ -13,6 +14,8 @@ import com.example.randomdogs.databinding.FragmentBreedsBinding
 import com.example.randomdogs.dogs.data.Breed
 import com.example.randomdogs.dogs.presentation.BreedsViewModel
 import com.example.randomdogs.dogs.presentation.BreedsViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class BreedsFragment : Fragment() {
@@ -24,7 +27,7 @@ class BreedsFragment : Fragment() {
 	private var _binding: FragmentBreedsBinding? = null
 	private val binding get() = _binding!!
 
-	private val breedAdapter = BreedAdapter()
+	private val breedAdapter = BreedPagingDataAdapter(BreedComparator)
 
 	companion object {
 
@@ -48,12 +51,12 @@ class BreedsFragment : Fragment() {
 		observeViewModel()
 
 		setupViews()
-
-		viewModel.loadDogs()
 	}
 
 	private fun observeViewModel() {
-		viewModel.breeds.observe(viewLifecycleOwner) { onBreedChanged(it) }
+		viewLifecycleOwner.lifecycleScope.launch {
+			viewModel.breeds.collectLatest(breedAdapter::submitData)
+		}
 	}
 
 	private fun setupViews() {
@@ -69,10 +72,6 @@ class BreedsFragment : Fragment() {
 			.add(R.id.fragment_container, BreedDetailFragment.newInstance(breed))
 			.addToBackStack(null)
 			.commit()
-	}
-
-	private fun onBreedChanged(breeds: List<Breed>) {
-		breedAdapter.setBreeds(breeds)
 	}
 
 	override fun onDestroyView() {
